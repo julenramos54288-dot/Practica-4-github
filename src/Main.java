@@ -1,5 +1,7 @@
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,11 +24,12 @@ public class Main {
                  scanner.close();
                  salir = true;
                  System.out.println(" Saliendo del programa ...");
+
                  }
              }
     }
 
-    public static String PedirDatosDelVehiculo(){
+    public static String pedirDatosDelVehiculo(){
         Scanner sc =new Scanner(System.in);
         System.out.println("Introduce la matricula de tu coche");
         String matricula = sc.nextLine();
@@ -55,7 +58,7 @@ public class Main {
                error=true;
            }
        }while (error) ;
-        return fechaCita;
+        return fechaCita;}
 
     public class GestorFechas {
          // Constante con el patron de formato espa ´ nol ˜

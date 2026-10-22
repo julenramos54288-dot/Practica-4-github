@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,10 +24,10 @@ public class Main {
                  }
              }
     }
-    public static void PedirDatosDelVehiculo(){
-        String matricula;
+    public static String PedirDatosDelVehiculo(){
         Scanner sc =new Scanner(System.in);
-        matricula = sc.nextLine();
+        System.out.println("Introduce la matricula de tu coche");
+        String matricula = sc.nextLine();
         matricula.toUpperCase();
         Pattern pt = Pattern.compile("([0-9]{4}[ ]?[BCDFGHJKLMNPRSTVWXYZ]{3})");
         Matcher mat = pt.matcher(matricula);
@@ -33,6 +35,24 @@ public class Main {
             matricula = sc.nextLine();
             matricula.toUpperCase();
         }
-
+        return matricula;
+    }
+    public static LocalDate PedirFechaCita() {
+        Scanner sc =new Scanner(System.in);
+        String fecha;
+        LocalDate fechaCita = null;
+        boolean error;
+       do {
+           error =false;
+           try {
+               System.out.println("Introduce la fecha en la que desees la cita    (año/mes/dia)");
+               fecha = sc.nextLine();
+               fechaCita = LocalDate.parse(fecha);
+           }catch (DateTimeParseException e){
+               System.out.println("Error en el formato de la matricula");
+               error=true;
+           }
+       }while (error) ;
+        return fechaCita;
     }
 }

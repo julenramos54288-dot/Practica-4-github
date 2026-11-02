@@ -72,7 +72,7 @@ public static void registrarCita() {
     cliente = scanner.nextLine();
 
     System.out.print("Matrícula del vehículo (ej. 1234ABC, 0012KFX, ECO): ");
-    matricula = scanner.nextLine().trim().toUpperCase(); // Convierte la matrícula a mayúsculas
+    matricula = scanner.nextLine().trim().toUpperCase().replace(" ",""); // Convierte la matrícula a mayúsculas
 
     System.out.print("La marca del vehículo: ");
     marca = scanner.nextLine();

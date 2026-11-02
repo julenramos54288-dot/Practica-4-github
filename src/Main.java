@@ -1,199 +1,189 @@
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class Main {
+private static String matricula;
+private static String marca;
+private static String modelo;
+private static int tipoServicio;
+private static String cliente;
+private static LocalDateTime fechaCita;
 
-    private static final Scanner scanner = new Scanner(System.in);
+// Formatos fecha
+private static final String PATRON_FECHA = "dd/MM/yyyy HH:mm";
+private static final DateTimeFormatter FORMATO_ESPANOL =
+        DateTimeFormatter.ofPattern(PATRON_FECHA, new Locale("es", "ES"));
 
-    public static void main(String[] args) {
-        boolean salir = false;
+// Entrada de datos.
+private static Scanner scanner = new Scanner(System.in);
 
-        while (!salir) {
-            System.out.println("\n--- GESTIÓN DE CITAS TALLER ---");
-            System.out.println("1. Registrar nueva cita");
-            System.out.println("2. Consultar citas por fecha");
-            System.out.println("3. Calcular coste de servicio");
-            System.out.println("4. Probar formato de fecha");
-            System.out.println("5. Salir");
-            System.out.print("Seleccione una opción: ");
+void main() {
 
-            if (!scanner.hasNextInt()) {
-                System.out.println("Debe introducir un número.");
-                scanner.nextLine();
-                continue;
-            }
+    // Mostrar menú y ejecutar la función adecuada.
+    boolean salir = false;
 
-            int opcion = scanner.nextInt();
-            scanner.nextLine(); // Limpiar el salto de línea
+    while (!salir) {
+        System.out.println("\n--- GESTIÓN DE CITAS TALLER ---");
+        System.out.println("1. Registrar nueva cita");
+        System.out.println("2. Consultar citas por fecha");
+        System.out.println("3. Calcular coste de servicio");
+        System.out.println("4. Salir");
+        System.out.print("Seleccione una opción: ");
 
-            switch (opcion) {
-                case 1:
-                    String matricula = pedirDatosDelVehiculo(scanner);
-                    LocalDate fecha = pedirFechaCita(scanner);
-                    System.out.println("Vehículo: " + matricula);
-                    System.out.println("Fecha de la cita: " + fecha);
-                    System.out.println("Datos validados. Este ejemplo todavía no guarda la cita.");
-                    break;
-                case 2:
-                    System.out.println("La consulta por fecha necesita una lista de citas guardadas.");
-                    break;
-                case 3:
-                    probarCalculoCoste(scanner);
-                    break;
-                case 4:
-                    probarFormatoFecha(scanner);
-                    break;
-                case 5:
-                    salir = true;
-                    System.out.println("Saliendo del programa...");
-                    break;
-                default:
-                    System.out.println("Opción no válida. Elija del 1 al 5.");
-            }
+        int opcion = scanner.nextInt();
+        if (opcion == 4) {
+            salir = true;
+            System.out.println("Saliendo del programa...");
         }
-
-        scanner.close();
-    }
-
-    public static double calcularCosteServicio(int tipoServicio, String matricula) {
-        double precioBase;
-
-        switch (tipoServicio) {
+        // Switch para realizar la operación adecuada en función de la opción elegida.
+        // Cada desarrollador codifica lo suyo.
+        // Se puede añadir un bucle hasta que la opción sea correcta.
+        switch (opcion) {
             case 1:
-                precioBase = 50.0; // Cambio de aceite y filtro
+                registrarCita();
                 break;
             case 2:
-                precioBase = 120.0; // Revisión general / Pre-ITV
+                consultarCitas();
                 break;
             case 3:
-                precioBase = 200.0; // Cambio de frenos y discos
-                break;
-            case 4:
-                precioBase = 350.0; // Reparación de distribución
+                calcularCosteServicio();
                 break;
             default:
-                System.out.println("Opción de servicio no válida. Se aplicará tarifa estándar.");
-                precioBase = 80.0;
+                System.out.println("Opción no válida.");
                 break;
         }
+    }
+}
 
-        String matriculaLimpia = matricula.trim().toUpperCase(Locale.ROOT);
-        double porcentajeDescuento = 0.0;
+public static void registrarCita() {
+    /*
+    Alumno A: Rama feature/registro-cita
+     (Pide datos del vehículo, convierte la matrícula a mayúsculas, y valida la fecha
+     introducida usando LocalDate).
+     */
+    Scanner scanner = new Scanner(System.in);
+    System.out.println("\n--- REGISTRO DE NUEVA CITA ---");
 
-        if (matriculaLimpia.endsWith("ECO")) {
-            porcentajeDescuento = 0.20;
-            System.out.println("Aplicado 20 % de descuento por matrícula ECO.");
-        } else if (matriculaLimpia.contains("00")) {
-            porcentajeDescuento = 0.10;
-            System.out.println("Aplicado 10 % de descuento por promoción especial (serie 00).");
-        } else if (matriculaLimpia.startsWith("H")) {
-            porcentajeDescuento = 0.15;
-            System.out.println("Aplicado 15 % de descuento para vehículo histórico.");
-        } else {
-            System.out.println("No se aplican descuentos a esta matrícula.");
-        }
+    // 1. Pedir datos del cliente y vehículo
+    // Falta el try, las expresiones regulares, repetitivas hasta que el dato sea correcto.
+    System.out.print("Nombre del cliente: ");
+    cliente = scanner.nextLine();
 
-        double descuento = precioBase * porcentajeDescuento;
-        return precioBase - descuento;
+    System.out.print("Matrícula del vehículo (ej. 1234ABC, 0012KFX, ECO): ");
+    matricula = scanner.nextLine().trim().toUpperCase().replace(" ",""); // Convierte la matrícula a mayúsculas
+
+    System.out.print("La marca del vehículo: ");
+    marca = scanner.nextLine();
+
+    System.out.print("Modelo del vehículo: ");
+    modelo = scanner.nextLine();
+
+    // 2. Pedir y validar la fecha y hora de la cita (hmmitaciendo uso de GestorFechas o validación local)
+    System.out.println("Asignación de fecha y hora --");
+    leerYValidarFecha();
+
+    System.out.println("Tipo de servicio para el que solicita la cita.");
+    System.out.println("1.- Cambio de aceite y filtro");
+    System.out.println("2.- Revisión general");
+    System.out.println("3.- Cambio de frenos");
+    System.out.println("4.- Distribución");
+    tipoServicio = scanner.nextInt();
+
+    // 3. Resumen del registro de la cita
+    System.out.println("\n========================================");
+    System.out.println("   ¡CITA REGISTRADA CORRECTAMENTE!");
+    System.out.println("========================================");
+    System.out.println("Cliente:   " + cliente);
+    System.out.println("Matrícula: " + matricula);
+    System.out.println("Modelo:  " + modelo);
+    System.out.println("Marca:  " + marca);
+    System.out.println("Fecha:     " + formatearFechaEspanol());
+    System.out.println("Tipo de servicio:     " + tipoServicio);
+    System.out.println("========================================\n");
+
+    // Se pueden crear funciones varias, en vez de todo el código en registrar cita.
+}
+
+public static void consultarCitas() {
+    // No lo hace nadie. Necesitamos una colección.
+
+}
+public static void calcularCosteServicio() {
+    double precioBase;
+
+    switch (tipoServicio) {
+        case 1:
+            precioBase = 50.0;  // Cambio de aceite y filtro
+            break;
+        case 2:
+            precioBase = 120.0; // Revisión general / Pre-ITV
+            break;
+        case 3:
+            precioBase = 200.0; // Cambio de frenos y discos
+            break;
+        case 4:
+            precioBase = 350.0; // Reparación de distribución
+            break;
+        default:
+            System.out.println("Opción de servicio no válida.");
+            precioBase = 80.0;
+            break;
     }
 
-    public static void probarCalculoCoste(Scanner scanner) {
-        System.out.println("\n--- CÁLCULO DE COSTE DE SERVICIO ---");
-        System.out.println("1. Cambio de aceite y filtro (50 €)");
-        System.out.println("2. Revisión general (120 €)");
-        System.out.println("3. Cambio de frenos (200 €)");
-        System.out.println("4. Distribución (350 €)");
-        System.out.print("Seleccione el tipo de servicio: ");
+    String matriculaLimpia = matricula.trim().toUpperCase();
 
-        if (!scanner.hasNextInt()) {
-            System.out.println("Debe introducir un número.");
-            scanner.nextLine();
-            return;
-        }
 
-        int opcionServicio = scanner.nextInt();
-        scanner.nextLine();
+    double porcentajeDescuento = 0.0;
 
-        System.out.print("Introduzca la matrícula del vehículo (ej. 1234 ECO, H1234BBB, 0012 KFX): ");
-        String matriculaInput = scanner.nextLine();
+    // Regla A: Vehículos híbridos/eléctricos o flotas especiales (ejemplo: terminan en "ECO")
+    if (matriculaLimpia.endsWith("ECO")) {
+        porcentajeDescuento = 0.20; // 20% de descuento
+        System.out.println("Aplicado 20% de descuento por matrícula ECO.");
 
-        double total = calcularCosteServicio(opcionServicio, matriculaInput);
-        System.out.printf(Locale.ROOT, "El importe total a pagar es: %.2f €%n", total);
+        // Regla B: Vehículos antiguos o promocionales (ejemplo: contienen el número "00")
+    } else
+    if (matriculaLimpia.contains("00")) {
+        porcentajeDescuento = 0.10; // 10% de descuento
+        System.out.println("Aplicado 10% de descuento por promoción especial (serie 00).");
+
+        // Regla C: Formato histórico o especial (ejemplo: empieza por la letra 'H')
+    } else
+    if (matriculaLimpia.startsWith("H")) {
+        porcentajeDescuento = 0.15; // 15% de descuento
+        System.out.println("Aplicado 15% de descuento para vehículo histórico.");
+    } else {
+        System.out.println("No se aplican descuentos a esta matrícula.");
     }
 
-    public static String pedirDatosDelVehiculo(Scanner scanner) {
-        Pattern patron = Pattern.compile("^[0-9]{4}\\s?[BCDFGHJKLMNPRSTVWXYZ]{3}$");
-        String matricula;
+    // 4. Cálculo final del coste
+    double descuento = precioBase * porcentajeDescuento;
+    double precioFinal = precioBase - descuento;
 
-        while (true) {
-            System.out.print("Introduce la matrícula de tu coche (ej. 1234 ABC): ");
-            matricula = scanner.nextLine().trim().toUpperCase(Locale.ROOT);
-            Matcher matcher = patron.matcher(matricula);
-
-            if (matcher.matches()) {
-                return matricula;
-            }
-
-            System.out.println("Matrícula no válida. Usa 4 números y 3 letras, por ejemplo 1234 ABC.");
-        }
+    System.out.printf("El importe total a pagar es: %.2f €\n", precioFinal);
+}
+public static String formatearFechaEspanol() {
+    // De las fechas se encarga el alumno C
+    if (fechaCita == null) {
+        return "Fecha no disponible";
     }
+    return fechaCita.format(FORMATO_ESPANOL);
+}
+public static void leerYValidarFecha() {
+    // De las fechas se encarga el alumno C
+    scanner.nextLine();
+    System.out.print("Fecha y hora de la cita (" + PATRON_FECHA + "): ");
+    String entrada = scanner.nextLine();
 
-    public static LocalDate pedirFechaCita(Scanner scanner) {
-        while (true) {
-            System.out.print("Introduce la fecha de la cita (AAAA-MM-DD): ");
-            String fecha = scanner.nextLine().trim();
+    try {
+        // Intenta parsear la cadena ingresada según el patrón definido
+        fechaCita = LocalDateTime.parse(entrada, FORMATO_ESPANOL);
+        System.out.println(" Fecha correcta.");
 
-            try {
-                return LocalDate.parse(fecha);
-            } catch (DateTimeParseException e) {
-                System.out.println("Fecha no válida. Usa el formato AAAA-MM-DD, por ejemplo 2026-10-27.");
-            }
-        }
-    }
-
-    public static class GestorFechas {
-        private static final String PATRON_FECHA = "dd/MM/yyyy HH:mm";
-        private static final DateTimeFormatter FORMATO_ESPANOL =
-                DateTimeFormatter.ofPattern(PATRON_FECHA, new Locale("es", "ES"));
-
-        public static String formatearFechaEspanol(LocalDateTime fechaHora) {
-            if (fechaHora == null) {
-                return "Fecha no disponible";
-            }
-            return fechaHora.format(FORMATO_ESPANOL);
-        }
-
-        public static LocalDateTime leerYValidarFecha(Scanner scanner) {
-            while (true) {
-                System.out.print("Introduzca la fecha y hora de la cita (" + PATRON_FECHA + "): ");
-                String entrada = scanner.nextLine().trim();
-
-                try {
-                    LocalDateTime fechaParseada =
-                            LocalDateTime.parse(entrada, FORMATO_ESPANOL);
-                    System.out.println("Fecha registrada correctamente.");
-                    return fechaParseada;
-                } catch (DateTimeParseException e) {
-                    System.out.println("Formato incorrecto. Debe usar dd/MM/yyyy HH:mm (ej. 27/10/2026 14:30).");
-                }
-            }
-        }
-    }
-
-    public static void probarFormatoFecha(Scanner scanner) {
-        System.out.println("\n--- CONSULTA Y REGISTRO DE FECHAS ---");
-        LocalDateTime ahora = LocalDateTime.now();
-        System.out.println("Fecha y hora actual del sistema: "
-                + GestorFechas.formatearFechaEspanol(ahora));
-
-        LocalDateTime fechaCita = GestorFechas.leerYValidarFecha(scanner);
-        System.out.println("Cita fijada para el: "
-                + GestorFechas.formatearFechaEspanol(fechaCita));
+    } catch (DateTimeParseException e) {
+        System.out.println("Formato incorrecto. Debe usar exactamente el formato: dd/MM/yyyy HH:mm");
+        System.out.println("Se asignará la fecha y hora actual por defecto.");
+        fechaCita = LocalDateTime.now();
     }
 }
